@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace _7Sept16_1
@@ -17,12 +18,36 @@ namespace _7Sept16_1
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            lbxFlavors.Items.Add("vanilla");
-            lbxFlavors.Items.Add("chocolate");
-            lbxFlavors.Items.Add("strawberry");
-            lbxFlavors.Items.Add("rocky road");
-            lbxFlavors.Items.Add("fear sundae");
-            lbxFlavors.Items.Add("peach");
+            string flavor;
+
+            try
+            {
+                // Open the data file for reading
+                StreamReader inputFile = File.OpenText("flavors.txt");
+
+                // Read all the lines in the file
+                while (!inputFile.EndOfStream)
+                {
+                    // Read the next line
+                    flavor = inputFile.ReadLine();
+
+                    //Add it to the list box
+                    lbxFlavors.Items.Add(flavor);
+                }
+
+                // Close the file
+                inputFile.Close();
+
+                // Display the number of flavors
+                lblFlavors.Text = lbxFlavors.Items.Count +
+                    " flavors available today";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Cones R' Us",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
+            }
         }
 
         private void lbxFlavors_SelectedIndexChanged(object sender, EventArgs e)
